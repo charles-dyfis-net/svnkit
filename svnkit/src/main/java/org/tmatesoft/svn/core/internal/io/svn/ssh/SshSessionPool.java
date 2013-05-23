@@ -1,17 +1,12 @@
 package org.tmatesoft.svn.core.internal.io.svn.ssh;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-
+import com.trilead.ssh2.ServerHostKeyVerifier;
+import com.trilead.ssh2.auth.AgentProxy;
 import org.tmatesoft.svn.util.SVNDebugLog;
 import org.tmatesoft.svn.util.SVNLogType;
 
-import com.trilead.ssh2.ServerHostKeyVerifier;
+import java.io.IOException;
+import java.util.*;
 
 public class SshSessionPool {
     
@@ -58,11 +53,11 @@ public class SshSessionPool {
     }
     
     public SshSession openSession(String host, int port, String userName,
-            char[] privateKey, char[] passphrase, char[] password,
-            ServerHostKeyVerifier verifier, int connectTimeout, int readTimeout) throws IOException {
+                                  char[] privateKey, char[] passphrase, char[] password, AgentProxy agentProxy,
+                                  ServerHostKeyVerifier verifier, int connectTimeout, int readTimeout) throws IOException {
 
         final SshHost newHost = new SshHost(host, port);
-        newHost.setCredentials(userName, privateKey, passphrase, password);
+        newHost.setCredentials(userName, privateKey, passphrase, password, agentProxy);
         newHost.setConnectionTimeout(connectTimeout);
         newHost.setHostVerifier(verifier);
         newHost.setReadTimeout(readTimeout);
